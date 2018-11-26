@@ -70,11 +70,17 @@ namespace RevitExporter.UI
 
         private void chkCatSelected_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox source = e.Source as CheckBox;
-            if (source.IsChecked == true)
-                MessageBox.Show("Selezionato");
-            else
-                MessageBox.Show("Non Selezionato");
+            //CheckBox source = e.Source as CheckBox;
+            //if (source.IsChecked == true)
+            //    MessageBox.Show("Selezionato");
+            //else
+            //    MessageBox.Show("Non Selezionato");
+        }
+
+        private void dgCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox lBox = sender as ListBox;
+            MessageBox.Show(lBox.SelectedItems.Count.ToString());
         }
 
 
