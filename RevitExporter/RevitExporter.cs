@@ -9,8 +9,9 @@ using Autodesk.Revit.UI;
 
 namespace RevitExporter
 {
-    class RevitExporter : IExternalApplication
+    public class RevitExporter : IExternalApplication
     {
+        
         public Result OnStartup(UIControlledApplication a)
         {
             return Result.Succeeded;
