@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command RevitExporter</Text>
+    <Description>Some description for RevitExporter</Description>
+    <Assembly>RevitExporter.dll</Assembly>
+    <FullClassName>RevitExporter.Command</FullClassName>
+    <ClientId>648e6600-de85-467d-85f7-afe11ffe23a6</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application RevitExporter</Name>
+    <Assembly>RevitExporter.dll</Assembly>
+    <FullClassName>RevitExporter.App</FullClassName>
+    <ClientId>54f0a5e3-49c8-4e25-a762-55b0aa53c682</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
