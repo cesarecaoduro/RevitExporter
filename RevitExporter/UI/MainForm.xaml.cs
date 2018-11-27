@@ -19,6 +19,7 @@ using Application = Autodesk.Revit.ApplicationServices.Application;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace RevitExporter.UI
 {
@@ -34,7 +35,7 @@ namespace RevitExporter.UI
         }
     }
 
-    public partial class MainForm : Window
+    public partial class MainForm : Window, INotifyPropertyChanged
     {
         private UIApplication _uiapp;
         private UIDocument _uidoc;
@@ -66,6 +67,19 @@ namespace RevitExporter.UI
             }
             dgCategories.ItemsSource = catItems.OrderBy(x => x._CategoryName);
 
+        }
+
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private void chkCatSelected_Click(object sender, RoutedEventArgs e)
