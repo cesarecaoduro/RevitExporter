@@ -9,7 +9,8 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Newtonsoft.Json;
-
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace RevitExporter
 {
@@ -52,7 +53,8 @@ namespace RevitExporter
 
             foreach (Room e in collector)
             {
-                rooms.Add(e);
+                if(e.Area != 0)
+                    rooms.Add(e);
             }
 
             return rooms;
@@ -159,6 +161,95 @@ namespace RevitExporter
             {
                 string jsonString = JsonConvert.SerializeObject(obj, Formatting.Indented);
                 File.WriteAllText(sd.FileName, jsonString);
+            }
+        }
+
+        internal static void ExportToExcel(List<RoomInfo> rooms)
+        {
+            SaveFileDialog sd = new SaveFileDialog();
+            sd.Filter = "Excel Files (*.xlsx)|*.xlsx";
+            sd.DefaultExt = "xlsx";
+            sd.AddExtension = true;
+            string initialPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString();
+            if (sd.ShowDialog() == DialogResult.OK)
+            {
+                var fi = new FileInfo(sd.FileName);
+                using (ExcelPackage package = new ExcelPackage(fi))
+                {
+                    ExcelWorksheet ws;
+                    try
+                    {
+                        ws = package.Workbook.Worksheets.Add("Ambienti");
+                    }
+                    catch
+                    {
+                    }
+
+                    ws = package.Workbook.Worksheets["Ambienti"];
+
+                    ws.Cells[1, 1].Value = "Sede";
+                    ws.Cells[1, 2].Value = "Società";
+                    ws.Cells[1, 3].Value = "Divisione";
+                    ws.Cells[1, 4].Value = "Direzione";
+                    ws.Cells[1, 5].Value = "CdC";
+                    ws.Cells[1, 6].Value = "Piano";
+                    ws.Cells[1, 7].Value = "Ambiente";
+                    ws.Cells[1, 8].Value = "Tipo";
+                    ws.Cells[1, 9].Value = "Postazioni";
+                    ws.Cells[1, 10].Value = "Postazioni Occupate";
+                    ws.Cells[1, 11].Value = "Postazioni Potenziali";
+                    ws.Cells[1, 12].Value = "Postazioni sale riunioni";
+                    ws.Cells[1, 13].Value = "Postazioni sale corsi e collaudi";
+                    ws.Cells[1, 14].Value = "mq netti";
+                    ws.Cells[1, 15].Value = "n. finestre";
+                    ws.Cells[1, 16].Value = "n. porte vetrate";
+                    ws.Cells[1, 17].Value = "n. porte opache";
+                    ws.Cells[1, 18].Value = "n. porte REI";
+                    ws.Cells[1, 19].Value = "Tipo Pavimento";
+                    ws.Cells[1, 20].Value = "Note";
+                    ws.Cells[1, 21].Value = "Efficienza";
+                    ws.Cells[1, 22].Value = "Id";
+
+                    ws.Cells.Style.Font.Name = "Arial";
+                    using (ExcelRange rng = ws.Cells["A1:V1"])
+                    {
+                        rng.Style.Font.Bold = true;
+                        rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DarkRed);
+                        rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    }
+
+                    int rowIndex = 2;
+                    foreach (RoomInfo r in rooms)
+                    {
+                        ws.Cells[rowIndex, 1].Value = r._Sede;
+                        ws.Cells[rowIndex, 2].Value = r._Societa;
+                        ws.Cells[rowIndex, 3].Value = r._Divisione;
+                        ws.Cells[rowIndex, 4].Value = r._Area;
+                        ws.Cells[rowIndex, 5].Value = r._CdC;
+                        ws.Cells[rowIndex, 6].Value = r._LevelName;
+                        ws.Cells[rowIndex, 7].Value = r._Name;
+                        ws.Cells[rowIndex, 8].Value = r._RoomType;
+                        ws.Cells[rowIndex, 9].Value = r._Desks;
+                        ws.Cells[rowIndex, 10].Value = r._OccupiedDesks;
+                        ws.Cells[rowIndex, 11].Value = r._TheoreticalDesks;
+                        ws.Cells[rowIndex, 12].Value = r._MeetingRoomDesks;
+                        ws.Cells[rowIndex, 13].Value = r._TrainingRoomDesks;
+                        ws.Cells[rowIndex, 14].Value = Math.Round(r._NetArea,3);
+                        ws.Cells[rowIndex, 15].Value = r._Windows;
+                        ws.Cells[rowIndex, 16].Value = r._GlassDoors;
+                        ws.Cells[rowIndex, 17].Value = r._OpaqueDoors;
+                        ws.Cells[rowIndex, 18].Value = r._FireRatedDoors;
+                        ws.Cells[rowIndex, 19].Value = r._FloorType;
+                        ws.Cells[rowIndex, 20].Value = r._Notes;
+                        ws.Cells[rowIndex, 21].Value = r._Efficency;
+                        ws.Cells[rowIndex, 22].Value = r._Id;
+                        rowIndex++;
+                    }
+                    package.Save();
+                    MessageBox.Show("Dati exportati!");
+                }
+
             }
         }
     }

@@ -29,12 +29,10 @@ namespace RevitExporter
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            MainFormW mForm = new MainFormW(commandData);
+            MainWindows mForm = new MainWindows(commandData);
             if (mForm.ShowDialog() == DialogResult.OK)
             {
-
             }
-            
             return Result.Succeeded;
         }
     }
